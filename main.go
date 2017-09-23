@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	app       = kingpin.New("smps", "A command-line client for storing secrets in AWS Parameter Store.")
-	region    = app.Flag("region", "S3 region").Envar("AWS_DEFAULT_REGION").Default("us-east-1").String()
-	kmsAlias  = app.Flag("kms", "AWS KMS key alias").Envar("AWS_KMS_ALIAS").Default("alias/aws/ssm").String()
+	app       = kingpin.New("psst", "A command-line client for storing secrets in AWS Parameter Store.")
+	region    = app.Flag("region", "AWS region").Envar("AWS_DEFAULT_REGION").Default("us-east-1").String()
+	kmsAlias  = app.Flag("kms", "KMS key alias").Envar("AWS_KMS_ALIAS").Default("alias/aws/ssm").String()
 	mfaSerial = app.Flag("mfa", "IAM MFA device ARN").Envar("AWS_MFA_ID").String()
-	roleArn   = app.Flag("role", "IAM Role ARN to assume").String()
+	roleArn   = app.Flag("role", "IAM role ARN to assume").String()
 )
 
 func main() {
