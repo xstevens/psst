@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"os/exec"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -53,4 +54,15 @@ func newSession(config *aws.Config, serial *string, role *string) (*session.Sess
 	}
 
 	return sess, nil
+}
+
+// The run function runs a command in an environment.
+// Stdout and stderr are preserved.
+func execCommandWithEnv(command []string, env []string) error {
+	cmd := exec.Command(command[0], command[1:]...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Env = env
+	return cmd.Run()
 }

@@ -11,21 +11,21 @@ import (
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
-type ReadCommand struct {
+type readCommand struct {
 	Name    string
 	Value   string
 	Decrypt bool
 }
 
 func configureReadCommand(app *kingpin.Application) {
-	rc := &ReadCommand{}
+	rc := &readCommand{}
 	read := app.Command("read", "Read secret from parameter store").Action(rc.runRead)
 	read.Arg("name", "Secret name").StringVar(&rc.Name)
 	read.Arg("value", "Secret value").StringVar(&rc.Value)
 	read.Flag("decrypt", "Return decrypted value").BoolVar(&rc.Decrypt)
 }
 
-func (rc *ReadCommand) runRead(ctx *kingpin.ParseContext) error {
+func (rc *readCommand) runRead(ctx *kingpin.ParseContext) error {
 	config := aws.NewConfig().WithRegion(*region)
 	sess, err := newSession(config, mfaSerial, roleArn)
 	if err != nil {

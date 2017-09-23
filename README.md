@@ -36,21 +36,24 @@ GOOS=linux GOARCH=amd64 go build
 ## Usage
 ```
 $ ./psst -h
-usage: smps [<flags>] <command> [<args> ...]
+usage: psst [<flags>] <command> [<args> ...]
 
 A command-line client for storing secrets in AWS Parameter Store.
 
 Flags:
   -h, --help                 Show context-sensitive help (also try --help-long and --help-man).
       --region="us-east-1"   AWS region
-      --kms="alias/aws/ssm"  AWS KMS key alias
+      --kms="alias/aws/ssm"  KMS key alias
       --mfa=MFA              IAM MFA device ARN
-      --role=ROLE            IAM Role ARN to assume
+      --role=ROLE            IAM role ARN to assume
       --version              Show application version.
 
 Commands:
   help [<command>...]
     Show help.
+
+  exec --with-prefix=WITH-PREFIX [<command>...]
+    Execute command with secrets populated in the environment
 
   read [<flags>] [<name>] [<value>]
     Read secret from parameter store

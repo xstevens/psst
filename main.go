@@ -19,6 +19,7 @@ func main() {
 	app.Version("0.1.0")
 	app.Author("Xavier Stevens <xavier.stevens@gmail.com>")
 
+	configureExecCommand(app)
 	configureReadCommand(app)
 	configureWriteCommand(app)
 
