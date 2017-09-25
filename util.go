@@ -12,9 +12,9 @@ import (
 	"github.com/aws/aws-sdk-go/service/sts"
 )
 
-func StdinTokenProvider() (string, error) {
+func stdinTokenProvider() (string, error) {
 	var v string
-	fmt.Printf("MFA token code: ")
+	fmt.Printf("AWS MFA code: ")
 	_, err := fmt.Scanln(&v)
 
 	return v, err
@@ -25,11 +25,11 @@ func newSession(config *aws.Config, serial *string, role *string) (*session.Sess
 	if role != nil && len(*role) > 0 && serial != nil && len(*serial) > 0 {
 		creds := stscreds.NewCredentials(sess, *role, func(p *stscreds.AssumeRoleProvider) {
 			p.SerialNumber = aws.String(*serial)
-			p.TokenProvider = StdinTokenProvider
+			p.TokenProvider = stdinTokenProvider
 		})
 		config.WithCredentials(creds)
 	} else if serial != nil && len(*serial) > 0 {
-		token, err := StdinTokenProvider()
+		token, err := stdinTokenProvider()
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "Failed to get token from stdin: %v\n", err.Error())
 			return nil, err
@@ -57,7 +57,7 @@ func newSession(config *aws.Config, serial *string, role *string) (*session.Sess
 }
 
 // The run function runs a command in an environment.
-// Stdout and stderr are preserved.
+// stdout and stderr are preserved.
 func execCommandWithEnv(command []string, env []string) error {
 	cmd := exec.Command(command[0], command[1:]...)
 	cmd.Stdin = os.Stdin

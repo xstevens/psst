@@ -19,9 +19,11 @@ func main() {
 	app.Version("0.1.0")
 	app.Author("Xavier Stevens <xavier.stevens@gmail.com>")
 
-	configureExecCommand(app)
 	configureReadCommand(app)
 	configureWriteCommand(app)
+	configureDeleteCommand(app)
+	configureExecCommand(app)
+	configureHistoryCommand(app)
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))
 }

@@ -52,14 +52,20 @@ Commands:
   help [<command>...]
     Show help.
 
-  exec --with-prefix=WITH-PREFIX [<command>...]
-    Execute command with secrets populated in the environment
-
-  read [<flags>] [<name>] [<value>]
+  read [<flags>] [<name>]
     Read secret from parameter store
 
   write [<flags>] [<name>] [<value>]
     Write secret to parameter store
+
+  delete [<name>]
+    Delete secret from parameter store
+
+  exec --with-prefix=WITH-PREFIX [<command>...]
+    Execute command with secrets populated in the environment
+
+  history [<flags>] [<name>]
+    Get secret history from parameter store
 ```
 
 ## License

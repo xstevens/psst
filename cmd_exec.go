@@ -28,10 +28,10 @@ func configureExecCommand(app *kingpin.Application) {
 
 func (ec *execCommand) nameToEnv(name *string) string {
 	// paths are expected to be in the form:
-	// `env/service/component/secret_name`
+	// `/env/service/component/secret_name`
 
 	// get secret_name
-	envName := path.Base(*name)
+	envName := fmt.Sprintf("%s_%s", path.Base(path.Dir(*name)), path.Base(*name))
 	// upper
 	envName = strings.ToUpper(envName)
 	// replace dots with underscores if there are any
@@ -46,24 +46,24 @@ func (ec *execCommand) runExec(ctx *kingpin.ParseContext) error {
 	config := aws.NewConfig().WithRegion(*region).WithCredentialsChainVerboseErrors(true)
 	sess, err := newSession(config, mfaSerial, roleArn)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to open session: %v\n", err.Error())
 		return err
 	}
 	ssmClient := ssm.New(sess, config)
 
-	gpinput := &ssm.GetParametersByPathInput{
+	// get parameters; recursive path search and decrypted
+	gpInput := &ssm.GetParametersByPathInput{
 		Path:           aws.String(ec.Prefix),
+		Recursive:      aws.Bool(true),
 		WithDecryption: aws.Bool(true),
 	}
-	gpoutput, err := ssmClient.GetParametersByPath(gpinput)
+	gpOutput, err := ssmClient.GetParametersByPath(gpInput)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to fetch secrets: %v\n", err.Error())
 		return err
 	}
 
 	// construct new environment where secrets override OS environment presets
 	env := []string{}
-	for _, param := range gpoutput.Parameters {
+	for _, param := range gpOutput.Parameters {
 		env = append(env, fmt.Sprintf("%s=%s", ec.nameToEnv(param.Name), *param.Value))
 	}
 	env = append(env, os.Environ()...)
