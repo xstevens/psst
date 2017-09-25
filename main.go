@@ -23,6 +23,7 @@ func main() {
 	configureWriteCommand(app)
 	configureDeleteCommand(app)
 	configureExecCommand(app)
+	configureListCommand(app)
 	configureHistoryCommand(app)
 
 	kingpin.MustParse(app.Parse(os.Args[1:]))

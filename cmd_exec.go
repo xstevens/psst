@@ -15,14 +15,14 @@ import (
 )
 
 type execCommand struct {
-	Prefix  string
+	Path    string
 	Command []string
 }
 
 func configureExecCommand(app *kingpin.Application) {
 	ec := &execCommand{}
 	exec := app.Command("exec", "Execute command with secrets populated in the environment").Action(ec.runExec)
-	exec.Flag("with-prefix", "Path prefix to fetch secrets from").Required().StringVar(&ec.Prefix)
+	exec.Flag("with-path", "Path to fetch secrets from").Required().StringVar(&ec.Path)
 	exec.Arg("command", "The command to execute").StringsVar(&ec.Command)
 }
 
@@ -52,7 +52,7 @@ func (ec *execCommand) runExec(ctx *kingpin.ParseContext) error {
 
 	// get parameters; recursive path search and decrypted
 	gpInput := &ssm.GetParametersByPathInput{
-		Path:           aws.String(ec.Prefix),
+		Path:           aws.String(ec.Path),
 		Recursive:      aws.Bool(true),
 		WithDecryption: aws.Bool(true),
 	}

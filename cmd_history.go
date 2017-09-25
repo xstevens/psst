@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"text/tabwriter"
+	"time"
 
 	"os"
 
@@ -31,7 +32,7 @@ func writeHistoryTable(history []*ssm.ParameterHistory) {
 		fmt.Fprintf(writer, "%s\t%s\t%s\t%s\t\n",
 			*entry.Value,
 			*entry.KeyId,
-			entry.LastModifiedDate,
+			entry.LastModifiedDate.Format(time.RFC3339),
 			*entry.LastModifiedUser)
 	}
 	writer.Flush()

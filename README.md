@@ -61,8 +61,11 @@ Commands:
   delete [<name>]
     Delete secret from parameter store
 
-  exec --with-prefix=WITH-PREFIX [<command>...]
+  exec --with-path=WITH-PATH [<command>...]
     Execute command with secrets populated in the environment
+
+  list <path>
+    List all secrets under a path in parameter store
 
   history [<flags>] [<name>]
     Get secret history from parameter store
@@ -74,5 +77,6 @@ All aspects of this software are distributed under the MIT License. See LICENSE 
 ## Inspirations and similar work
 - [Chamber](https://github.com/segmentio/chamber)
 - [Confidant](https://lyft.github.io/confidant)
+- [Keywhiz](https://square.github.io/keywhiz)
 - [Sneaker](https://github.com/codahale/sneaker)
 - [Vault](https://www.vaultproject.io)
