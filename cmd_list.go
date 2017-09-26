@@ -26,6 +26,7 @@ func configureListCommand(app *kingpin.Application) {
 func writeMetadataTable(metadata []*ssm.ParameterMetadata) {
 	writer := tabwriter.NewWriter(os.Stdout, 4, 0, 4, ' ', 0)
 	fmt.Fprintln(writer, "Name\tKey Alias\tLast Modified\tUser\t")
+	fmt.Fprintln(writer, "----\t---------\t-------------\t----\t")
 	for _, paramMeta := range metadata {
 		fmt.Fprintf(writer, "%s\t%s\t%s\t%s\t\n",
 			*paramMeta.Name,

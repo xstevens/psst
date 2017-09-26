@@ -28,6 +28,7 @@ func configureHistoryCommand(app *kingpin.Application) {
 func writeHistoryTable(history []*ssm.ParameterHistory) {
 	writer := tabwriter.NewWriter(os.Stdout, 4, 0, 4, ' ', 0)
 	fmt.Fprintln(writer, "Value\tKey Alias\tLast Modified\tUser\t")
+	fmt.Fprintln(writer, "-----\t---------\t-------------\t----\t")
 	for _, entry := range history {
 		fmt.Fprintf(writer, "%s\t%s\t%s\t%s\t\n",
 			*entry.Value,
