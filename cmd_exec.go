@@ -8,9 +8,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ssm"
 
-	"path"
-	"strings"
-
 	"gopkg.in/alecthomas/kingpin.v2"
 )
 
@@ -24,22 +21,6 @@ func configureExecCommand(app *kingpin.Application) {
 	exec := app.Command("exec", "Execute command with secrets populated in the environment").Action(ec.runExec)
 	exec.Flag("with-path", "Path to fetch secrets from").Required().StringVar(&ec.Path)
 	exec.Arg("command", "The command to execute").StringsVar(&ec.Command)
-}
-
-func (ec *execCommand) nameToEnv(name *string) string {
-	// paths are expected to be in the form:
-	// `/env/service/component/secret_name`
-
-	// get secret_name
-	envName := fmt.Sprintf("%s_%s", path.Base(path.Dir(*name)), path.Base(*name))
-	// upper
-	envName = strings.ToUpper(envName)
-	// replace dots with underscores if there are any
-	envName = strings.Replace(envName, ".", "_", -1)
-	// replace hyphen with underscores if there are any
-	envName = strings.Replace(envName, "-", "_", -1)
-
-	return envName
 }
 
 func (ec *execCommand) runExec(ctx *kingpin.ParseContext) error {
@@ -64,7 +45,7 @@ func (ec *execCommand) runExec(ctx *kingpin.ParseContext) error {
 	// construct new environment where secrets override OS environment presets
 	env := []string{}
 	for _, param := range gpOutput.Parameters {
-		env = append(env, fmt.Sprintf("%s=%s", ec.nameToEnv(param.Name), *param.Value))
+		env = append(env, fmt.Sprintf("%s=%s", nameToEnv(param.Name), *param.Value))
 	}
 	env = append(env, os.Environ()...)
 

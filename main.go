@@ -23,6 +23,7 @@ func main() {
 	configureWriteCommand(app)
 	configureDeleteCommand(app)
 	configureExecCommand(app)
+	configureEnvDirCommand(app)
 	configureListCommand(app)
 	configureHistoryCommand(app)
 

@@ -55,7 +55,7 @@ Commands:
   read [<flags>] [<name>]
     Read secret from parameter store
 
-  write [<flags>] [<name>] [<value>]
+  write [<flags>] [<name>]
     Write secret to parameter store
 
   delete [<name>]
@@ -63,6 +63,9 @@ Commands:
 
   exec --with-path=WITH-PATH [<command>...]
     Execute command with secrets populated in the environment
+
+  envdir --with-path=WITH-PATH [<output-dir>]
+    Write secrets into environment variable files (e.g. chpst -e)
 
   list <path>
     List all secrets under a path in parameter store

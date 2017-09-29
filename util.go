@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
+	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
@@ -54,6 +56,23 @@ func newSession(config *aws.Config, serial *string, role *string) (*session.Sess
 	}
 
 	return sess, nil
+}
+
+// converts a secret name (path) to a normalized environment variable name
+func nameToEnv(name *string) string {
+	// paths are expected to be in the form:
+	// `/env/service/component/secret_name`
+
+	// get secret_name
+	envName := fmt.Sprintf("%s_%s", path.Base(path.Dir(*name)), path.Base(*name))
+	// upper
+	envName = strings.ToUpper(envName)
+	// replace dots with underscores if there are any
+	envName = strings.Replace(envName, ".", "_", -1)
+	// replace hyphen with underscores if there are any
+	envName = strings.Replace(envName, "-", "_", -1)
+
+	return envName
 }
 
 // The run function runs a command in an environment.
