@@ -42,12 +42,18 @@ func (ec *envDirCommand) runEnvDir(ctx *kingpin.ParseContext) error {
 	}
 
 	// write secrets to environment var files in output directory
+	if err = os.MkdirAll(ec.OutputDir, 0750); err != nil {
+		return err
+	}
+
 	for _, param := range gpOutput.Parameters {
-		f, err := os.OpenFile(path.Join(ec.OutputDir, nameToEnv(param.Name)), os.O_RDWR|os.O_CREATE, 0640)
+		fpath := path.Join(ec.OutputDir, nameToEnv(param.Name))
+		f, err := os.OpenFile(fpath, os.O_RDWR|os.O_CREATE, 0640)
 		if err != nil {
 			return err
 		}
 
+		// write secret value
 		if _, err = f.WriteString(*param.Value); err != nil {
 			return err
 		}
@@ -55,7 +61,12 @@ func (ec *envDirCommand) runEnvDir(ctx *kingpin.ParseContext) error {
 		if err := f.Close(); err != nil {
 			return err
 		}
+
+		// chmod to read-only
+		if err = os.Chmod(fpath, 0440); err != nil {
+			return err
+		}
 	}
 
-	return nil
+	return os.Chmod(ec.OutputDir, 0550)
 }
